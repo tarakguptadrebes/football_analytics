@@ -1,13 +1,20 @@
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+
 from sqlalchemy import create_engine
 import os
 from dotenv import load_dotenv
 
 from scrapers.sofascore_player_stats_scraper import scrape_player_stats
+from scrapers.sofascore_matches_scraper import scrape_matches
 
 load_dotenv()
 
 def main():
     print("1. Scrape Player Stats")
+    print("2. Scrape Matches")
     option = input("Enter the number of the scraper to run: ")
 
     if option == "1":
@@ -40,7 +47,12 @@ def main():
 
         seasons = ["20/21", "21/22", "22/23", "23/24", "24/25"]
 
-        df = scrape_player_stats(league["name"], league["slug"], seasons)
+        df = scrape_player_stats(league["name"], seasons)
+        table_name = f"sofascore_{league_slug}_player_stats"
+
+    elif option == "2":
+        df = scrape_matches()
+        table_name = "sofascore_matches"
 
     else:
         print("Invalid option")
@@ -49,8 +61,6 @@ def main():
     if df.empty:
         print("No data scraped.")
         return
-
-    table_name = f"sofascore_{league_slug}_player_stats"
 
     db_url = (
         f"postgresql+psycopg2://{os.getenv('DB_USER')}:"

@@ -3,10 +3,10 @@ import pandas as pd
 import random
 import time
 
-ss = Sofascore()
-
 # Loop through each season to get all match IDs
-def scrape_player_stats(league, league_slug, seasons):
+def scrape_player_stats(league, seasons):
+    
+    ss = Sofascore()
 
     player_stats = []
     match_ids = []
@@ -28,8 +28,8 @@ def scrape_player_stats(league, league_slug, seasons):
                 df = df.loc[:, ~df.columns.duplicated()]    # remove duplicate columns
                 df["match_id"] = match_id
                 player_stats.append(df)
-        except Exception as e:
-            print(f"Error scraping match {match_id}: {e}")
+        except Exception:
+            print(f"Error scraping match")
             break
         
         print(f"{i+1}/{total_matches}", end="\r")    # simple progress counter
