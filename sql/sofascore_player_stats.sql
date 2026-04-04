@@ -14,4 +14,6 @@ SELECT id, match_id, name, slug, position, "dateOfBirthTimestamp", rating
 FROM sofascore_premier_league_player_stats
 UNION ALL
 SELECT id, match_id, name, slug, position, "dateOfBirthTimestamp", rating
-FROM sofascore_serie_a_player_stats
+FROM sofascore_serie_a_player_stats;
+
+SELECT * FROM sofascore_player_stats
