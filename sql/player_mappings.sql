@@ -5,7 +5,7 @@ WITH sofascore_players AS(
 	SELECT DISTINCT
         name,
         date_of_birth
-    FROM sofascore_player_stats_joined
+    FROM sofascore_player_match_data
 )
 
 SELECT

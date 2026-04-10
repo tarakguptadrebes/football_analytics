@@ -1,8 +1,7 @@
-DROP TABLE IF EXISTS market_valuations_with_age;
+DROP TABLE IF EXISTS market_values_with_age;
 
-CREATE TABLE market_valuations_with_age AS
-SELECT *
-FROM (
+CREATE TABLE market_values_with_age AS
+WITH ranked AS (
 	SELECT pv.player_id, 
 		pv.market_value_in_eur,
 		pv.player_club_domestic_competition_id,
@@ -19,9 +18,17 @@ FROM (
 	WHERE pv.date::date >= '2020-08-01'
 		AND pv.date::date <  '2025-08-01'
 		AND pv.player_club_domestic_competition_id IN ('ES1','FR1','GB1','IT1','L1')
-) AS t
-WHERE rn <= 1000;
+),
+valid_ages AS (
+	SELECT age
+	FROM ranked
+	GROUP BY age
+	HAVING COUNT(*) >= 1000
+)
 
-SELECT * FROM market_valuations_with_age
+SELECT *
+FROM ranked
+WHERE rn <= 1000
+	AND age IN (SELECT age FROM valid_ages);
 
-
+SELECT * FROM market_values_with_age
