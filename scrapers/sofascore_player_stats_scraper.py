@@ -7,7 +7,6 @@ import time
 def scrape_player_stats(league, seasons):
     
     ss = Sofascore()
-
     player_stats = []
     match_ids = []
 
@@ -25,7 +24,6 @@ def scrape_player_stats(league, seasons):
             time.sleep(random.uniform(0.5, 1)) 
             df = ss.scrape_player_match_stats(match_id)
             if df is not None and not df.empty:
-                df = df.loc[:, ~df.columns.duplicated()]    # remove duplicate columns
                 df["match_id"] = match_id
                 player_stats.append(df)
         except Exception:
@@ -34,7 +32,6 @@ def scrape_player_stats(league, seasons):
         
         print(f"{i+1}/{total_matches}", end="\r")    # simple progress counter
 
-    # Save the combined player stats to a CSV file
     if player_stats:
         return pd.concat(player_stats, ignore_index=True)
     else:

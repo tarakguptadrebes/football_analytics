@@ -1,41 +1,22 @@
 import sys
-from pathlib import Path
-
-import os
-from sqlalchemy import create_engine
-from dotenv import load_dotenv
-
+from database import get_engine, clean_for_sql
+from config import LEAGUES, SEASONS
 from scrapers.sofascore_player_stats_scraper import scrape_player_stats
 
-load_dotenv()
-
 def main():
-    LEAGUES = [
-        {"name": "England Premier League", "slug": "premier_league"},
-        {"name": "Spain La Liga", "slug": "la_liga"},
-        {"name": "Germany Bundesliga", "slug": "bundesliga"},
-        {"name": "Italy Serie A", "slug": "serie_a"},
-        {"name": "France Ligue 1", "slug": "ligue_1"}
-    ]
 
-    league_slug = sys.argv[1]
+    slug = sys.argv[1]
+    name = LEAGUES.get(slug)
 
-    league = next(league for league in LEAGUES if league["slug"] == league_slug)
+    if not name:
+        print(f"Error: '{slug}' is not valid. Check config.py.")
+        return
 
-    seasons = ["20/21", "21/22", "22/23", "23/24", "24/25"]
+    df = scrape_player_stats(name, SEASONS)
 
-    df = scrape_player_stats(league["name"], seasons)
-    table_name = f"sofascore_{league_slug}_player_stats"
-
-    db_url = (
-        f"postgresql+psycopg2://{os.getenv('DB_USER')}:"
-        f"{os.getenv('DB_PASS')}@{os.getenv('DB_HOST')}:"
-        f"{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-    )
-    engine = create_engine(db_url)
-
-    dict_cols = [col for col in df.columns if df[col].apply(lambda x: isinstance(x, dict)).any()]
-    df = df.drop(columns=dict_cols)
+    df = clean_for_sql(df)
+    engine = get_engine()
+    table_name = f"sofascore_{slug}_player_stats"
 
     df.to_sql(table_name, engine, if_exists="replace", index=False)
     print(f"Data saved to table '{table_name}' in the database.")

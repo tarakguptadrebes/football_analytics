@@ -1,20 +1,9 @@
 from ScraperFC.sofascore import Sofascore
 import pandas as pd
 
-def scrape_matches():
+def scrape_matches(leagues, seasons):
 
     ss = Sofascore()
-
-    # Seasons and leagues to scrape
-    seasons = ["20/21", "21/22", "22/23", "23/24", "24/25"]
-    leagues = [
-        "England Premier League",
-        "Germany Bundesliga",
-        "Spain La Liga",
-        "Italy Serie A",
-        "France Ligue 1",
-        ]
-
     matches = []
 
     # Loop through each season and league to get match info
@@ -24,5 +13,4 @@ def scrape_matches():
                 matches.append(m)
 
     df = pd.DataFrame(matches)
-    df = df.loc[:, ~df.columns.duplicated()]
     return df
