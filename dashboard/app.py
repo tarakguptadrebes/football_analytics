@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import statsmodels.api as sm
 from database import get_engine
 
 st.set_page_config(page_title="Football Analytics Dashboard", layout="wide")
@@ -26,8 +27,8 @@ def load_market_values_with_age():
     return pd.read_sql("SELECT age, market_value_in_eur FROM market_values_with_age", engine)
 
 @st.cache_data
-def load_ratings_with_age():
-    return pd.read_sql("SELECT age, rating FROM ratings_with_age", engine)
+def load_values_ratings_with_age():
+    return pd.read_sql("SELECT age, market_value_in_eur, rating FROM values_ratings_with_age", engine)
 
 df_value = load_avg_market_value_with_age()
 
@@ -57,13 +58,22 @@ st.plotly_chart(fig, width='stretch')
 
 df_change = load_change_in_market_value()
 
+df_change['color_status'] = df_change['change_in_value'].apply(lambda x: 'Positive' if x >= 0 else 'Negative')
+
 fig = px.bar(
     df_change,
     x="age",
     y="change_in_value",
+    color="color_status",
     title="Change in Market Value by Age",
     labels={"age": "Age", "change_in_value": "Change in Market Value (€)"},
+    color_discrete_map={
+        'Positive': '#00cc96', # Professional green
+        'Negative': '#ef553b'  # Professional red
+    }
 )
+
+fig.update_layout(showlegend=False)
 
 st.plotly_chart(fig, width='stretch')
 
@@ -86,25 +96,43 @@ fig.update_traces(
 
 st.plotly_chart(fig, width='stretch')
 
-df_ratings = load_ratings_with_age()
+df_values_ratings = load_values_ratings_with_age()
 
-min_age = int(df_ratings['age'].min())
-max_age = int(df_ratings['age'].max())
+def get_age_group(age):
+    if age < 24:
+        return "18-24"
+    elif 24 <= age < 30:
+        return "24-29"
+    elif 30 <= age < 36:
+        return "30-35"
+    
+df_values_ratings['age_group'] = df_values_ratings['age'].apply(get_age_group)
 
-ages = st.slider("Select Age Range", min_age, max_age, (min_age, max_age))
-filtered_df = df_ratings[(df_ratings['age'] >= ages[0]) & (df_ratings['age'] <= ages[1])]
-
-fig = px.box(
-    filtered_df,
+fig = px.scatter(
+    df_values_ratings,
+    x="market_value_in_eur",
     y="rating",
-    title="Rating Distribution by Age",
-    labels={"age": "Age", "rating": "Rating"},  
+    trendline="ols",
+    title="Average Rating by Market Value",
+    labels={"market_value_in_eur": "Market Value (€)", "rating": "Average Rating"},
+    color="age_group",
+    color_discrete_map={
+        "18-24": "#00CC96", 
+        "24-29": "#636EFA", 
+        "30-35": "#EF553B"
+    }
 )
+results = px.get_trendline_results(fig)
+model = results.iloc[0]["px_fit_results"]
+
+alpha = model.params[0]
+beta = model.params[1]
+r_squared = model.rsquared
+
 fig.update_traces(
     marker=dict(
         size=2,    
         opacity=0.3, 
-        outliercolor='rgba(0,0,0,0)'
     )
 )
 

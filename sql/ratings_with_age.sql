@@ -14,10 +14,11 @@ market_value_players_by_age AS (
 	FROM market_values_with_age
 )
 
-SELECT m.age, m.rating
+SELECT m.player_id, m.age, AVG(m.rating) AS rating
 FROM mapping AS m
 INNER JOIN market_value_players_by_age AS mv
 	ON m.player_id = mv.player_id
-	AND m.age = mv.age;
+	AND m.age = mv.age
+GROUP BY m.player_id, m.age;
 
 SELECT * FROM ratings_with_age

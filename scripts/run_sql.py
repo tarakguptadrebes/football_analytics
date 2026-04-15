@@ -21,9 +21,10 @@ sql_files = [
     "sofascore_player_match_data.sql",
     "player_mappings.sql",
     "market_values_with_age.sql",
+    "ratings_with_age.sql",
+    "values_ratings_with_age.sql",
     "avg_market_value_with_age.sql",
     "change_in_market_value.sql",
-    "ratings_with_age.sql",
     "avg_rating_with_age.sql",
 ]
 
