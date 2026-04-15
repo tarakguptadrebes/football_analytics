@@ -23,6 +23,7 @@ sql_files = [
     "market_values_with_age.sql",
     "avg_market_value_with_age.sql",
     "change_in_market_value.sql",
+    "ratings_with_age.sql",
     "avg_rating_with_age.sql",
 ]
 
