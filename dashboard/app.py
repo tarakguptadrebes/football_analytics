@@ -36,7 +36,7 @@ fig = px.line(
     df_value,
     x="age",
     y="avg_market_value",
-    title="Average Market Value by Age",
+    title="Average Market Value by Age for Top 500 Highest Valued Players at Each Age",
     labels={"age": "Age", "avg_market_value": "Average Market Value (€)"},
     markers=True
 )
@@ -49,7 +49,7 @@ fig = px.line(
     df_rating,
     x="age",
     y="avg_rating",
-    title="Average Rating by Age",
+    title="Average Rating by Age for Top 500 Highest Valued Players at Each Age",
     labels={"age": "Age", "avg_rating": "Average Rating"},
     markers=True
 )
@@ -65,7 +65,7 @@ fig = px.bar(
     x="age",
     y="change_in_value",
     color="color_status",
-    title="Change in Market Value by Age",
+    title="Change in Market Value by Age for Top 500 Highest Valued Players at Each Age",
     labels={"age": "Age", "change_in_value": "Change in Market Value (€)"},
     color_discrete_map={
         'Positive': '#00cc96', # Professional green
@@ -83,7 +83,7 @@ fig = px.box(
     df_values,
     x="age",
     y="market_value_in_eur",
-    title="Market Value Distribution by Age",
+    title="Market Value Distribution by Age for Top 500 Highest Valued Players at Each Age",
     labels={"age": "Age", "market_value_in_eur": "Market Value (€)"},  
 )
 fig.update_traces(
@@ -100,7 +100,7 @@ df_values_ratings = load_values_ratings_with_age()
 
 def get_age_group(age):
     if age < 24:
-        return "18-24"
+        return "18-23"
     elif 24 <= age < 30:
         return "24-29"
     elif 30 <= age < 36:
@@ -113,15 +113,18 @@ fig = px.scatter(
     x="market_value_in_eur",
     y="rating",
     trendline="ols",
-    title="Average Rating by Market Value",
-    labels={"market_value_in_eur": "Market Value (€)", "rating": "Average Rating"},
+    title="Average Rating by Market Value for Top 500 Highest Valued Players at Each Age",
+    labels={"market_value_in_eur": "Market Value (€)", 
+            "rating": "Rating",
+            "age_group": "Age Group"},
     color="age_group",
     color_discrete_map={
-        "18-24": "#00CC96", 
+        "18-23": "#00CC96", 
         "24-29": "#636EFA", 
         "30-35": "#EF553B"
     }
 )
+
 results = px.get_trendline_results(fig)
 model = results.iloc[0]["px_fit_results"]
 
@@ -129,11 +132,11 @@ alpha = model.params[0]
 beta = model.params[1]
 r_squared = model.rsquared
 
-fig.update_traces(
-    marker=dict(
-        size=2,    
-        opacity=0.3, 
-    )
-)
+fig.update_traces(marker=dict(size=2, opacity=0.3))
+fig.update_layout(legend=dict(itemsizing='constant'))
+fig.for_each_trace(lambda t: t.update(
+    name=t.name.replace("rating", "y").replace("market_value_in_eur", "x"),
+    hovertemplate=t.hovertemplate.replace("rating", "y").replace("market_value_in_eur", "x")
+))
 
 st.plotly_chart(fig, width='stretch')
