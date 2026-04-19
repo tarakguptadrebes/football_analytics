@@ -1,6 +1,8 @@
 import pandas as pd
+import numpy as np
 import streamlit as st
 import plotly.express as px
+import plotly.graph_objects as go
 import statsmodels.api as sm
 from database import get_engine
 
@@ -23,10 +25,6 @@ def load_change_in_market_value():
     return pd.read_sql("SELECT age, change_in_value FROM change_in_market_value", engine)
 
 @st.cache_data
-def load_market_values_with_age():
-    return pd.read_sql("SELECT age, market_value_in_eur FROM market_values_with_age", engine)
-
-@st.cache_data
 def load_values_ratings_with_age():
     return pd.read_sql("SELECT age, market_value_in_eur, rating FROM values_ratings_with_age", engine)
 
@@ -36,7 +34,7 @@ fig = px.line(
     df_value,
     x="age",
     y="avg_market_value",
-    title="Average Market Value by Age for Top 500 Highest Valued Players at Each Age",
+    title="Average Market Value by Age for Top 500 Players By Market Value at Each Age",
     labels={"age": "Age", "avg_market_value": "Average Market Value (€)"},
     markers=True
 )
@@ -49,7 +47,7 @@ fig = px.line(
     df_rating,
     x="age",
     y="avg_rating",
-    title="Average Rating by Age for Top 500 Highest Valued Players at Each Age",
+    title="Average Rating by Age for Top 500 Players By Market Value at Each Age",
     labels={"age": "Age", "avg_rating": "Average Rating"},
     markers=True
 )
@@ -65,7 +63,7 @@ fig = px.bar(
     x="age",
     y="change_in_value",
     color="color_status",
-    title="Change in Market Value by Age for Top 500 Highest Valued Players at Each Age",
+    title="Change in Market Value by Age for Top 500 Players By Market Value at Each Age",
     labels={"age": "Age", "change_in_value": "Change in Market Value (€)"},
     color_discrete_map={
         'Positive': '#00cc96', # Professional green
@@ -77,15 +75,18 @@ fig.update_layout(showlegend=False)
 
 st.plotly_chart(fig, width='stretch')
 
-df_values = load_market_values_with_age()
+df_values_ratings = load_values_ratings_with_age()
 
 fig = px.box(
-    df_values,
+    df_values_ratings,
     x="age",
     y="market_value_in_eur",
-    title="Market Value Distribution by Age for Top 500 Highest Valued Players at Each Age",
+    title="Market Value Distribution by Age for Top 500 Players By Market Value at Each Age",
     labels={"age": "Age", "market_value_in_eur": "Market Value (€)"},  
 )
+
+fig.update_layout(yaxis=dict(range=[0, 80_000_000]))
+
 fig.update_traces(
     marker=dict(
         size=2,    
@@ -96,47 +97,69 @@ fig.update_traces(
 
 st.plotly_chart(fig, width='stretch')
 
-df_values_ratings = load_values_ratings_with_age()
-
 def get_age_group(age):
-    if age < 24:
-        return "18-23"
-    elif 24 <= age < 30:
-        return "24-29"
-    elif 30 <= age < 36:
-        return "30-35"
+    if age < 21:
+        return "18-20"
+    elif 21 <= age < 24:
+        return "21-23"
+    elif 24 <= age < 27:
+        return "24-26"
+    elif 27 <= age < 30:
+        return "27-29"
+    elif 30 <= age < 33:
+        return "30-32"
+    elif 33 <= age < 36:
+        return "33-35"
     
 df_values_ratings['age_group'] = df_values_ratings['age'].apply(get_age_group)
 
-fig = px.scatter(
-    df_values_ratings,
-    x="market_value_in_eur",
-    y="rating",
-    trendline="ols",
-    title="Average Rating by Market Value for Top 500 Highest Valued Players at Each Age",
-    labels={"market_value_in_eur": "Market Value (€)", 
-            "rating": "Rating",
-            "age_group": "Age Group"},
-    color="age_group",
-    color_discrete_map={
-        "18-23": "#00CC96", 
-        "24-29": "#636EFA", 
-        "30-35": "#EF553B"
-    }
+fig = go.Figure()
+
+for group in ["18-20", "21-23", "24-26", "27-29", "30-32", "33-35"]:
+    subset = df_values_ratings[df_values_ratings['age_group'] == group]
+    if subset.empty: continue
+    
+    m, c = np.polyfit(subset['rating'], subset['market_value_in_eur'], 1)
+                      
+    formula_text = f"y = {m/1e6:.2f}Mx + {c/1e6:.2f}M"
+
+    min_y, max_y = subset['market_value_in_eur'].min(), subset['market_value_in_eur'].max()
+    min_x, max_x = subset['rating'].min(), subset['rating'].max()
+
+    x_start, x_end = min_x, max_x
+    y_start, y_end = m * x_start + c, m * x_end + c
+
+    if y_start < min_y:
+        y_start = min_y
+        x_start = (y_start - c) / m
+    if y_end > max_y:
+        y_end = max_y
+        x_end = (y_end - c) / m
+
+    x_start = max(x_start, min_x)
+    x_end = min(x_end, max_x)
+    y_start, y_end = m * x_start + c, m * x_end + c
+
+    # 4. Plot (No Hover, Formula in Legend)
+    fig.add_scatter(
+        x=[x_start, x_end],
+        y=[y_start, y_end],
+        mode='lines',
+        name=f"<b>{group}</b> | {formula_text}",
+        hoverinfo='skip', 
+        line=dict(color={
+            "18-20": "#8B5CF6", "21-23": "#3B82F6", "24-26": "#10B981",
+            "27-29": "#FACC15", "30-32": "#F97316", "33-35": "#EF4444"
+        }[group], width=3)
+    )
+
+fig.update_layout(
+    xaxis_title="Rating",
+    yaxis_title="Market Value (€)",
+    template="plotly_white",
+    legend=dict(
+        title="Age Group & Trendline",
+    )
 )
 
-results = px.get_trendline_results(fig)
-model = results.iloc[0]["px_fit_results"]
-
-alpha = model.params[0]
-beta = model.params[1]
-r_squared = model.rsquared
-
-fig.update_traces(marker=dict(size=2, opacity=0.3))
-fig.update_layout(legend=dict(itemsizing='constant'))
-fig.for_each_trace(lambda t: t.update(
-    name=t.name.replace("rating", "y").replace("market_value_in_eur", "x"),
-    hovertemplate=t.hovertemplate.replace("rating", "y").replace("market_value_in_eur", "x")
-))
-
-st.plotly_chart(fig, width='stretch')
+st.plotly_chart(fig, use_container_width=True)
