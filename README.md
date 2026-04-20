@@ -9,7 +9,7 @@ cd football_analytics
 
 # Create and activate virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+source .venv/bin/activate  # On Windows use: .venv\Scripts\Activate.ps1
 
 # Install dependencies
 pip install -r requirements.txt

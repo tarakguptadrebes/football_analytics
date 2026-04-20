@@ -3,7 +3,6 @@ import numpy as np
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
-import statsmodels.api as sm
 from database import get_engine
 
 st.set_page_config(page_title="Football Analytics Dashboard", layout="wide")
@@ -154,6 +153,7 @@ for group in ["18-20", "21-23", "24-26", "27-29", "30-32", "33-35"]:
     )
 
 fig.update_layout(
+    title="Market Value vs Rating by Age (Top 500 Players By Market Value at Each Age)",
     xaxis_title="Rating",
     yaxis_title="Market Value (€)",
     template="plotly_white",
