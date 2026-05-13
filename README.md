@@ -7,12 +7,8 @@
 git clone https://github.com/tarakguptadrebes/football_analytics.git
 cd football_analytics
 
-# Create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows use: .\.venv\Scripts\Activate.ps1
-
 # Install dependencies
-pip install -r requirements.txt
+poetry install
 
 # Create the PostgreSQL database
 psql -U postgres -c "CREATE DATABASE football_db;"
@@ -20,6 +16,9 @@ psql -U postgres -c "CREATE DATABASE football_db;"
 # Initialize credentials
 cp .env.example .env
 # STOP: Open .env and enter your PostgreSQL password now!
+
+# Activate the virtual environment
+eval $(poetry env activate)
 ```
 
 ## Quick Start (Recommended)

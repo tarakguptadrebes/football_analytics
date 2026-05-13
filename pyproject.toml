@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "football-analytics"
+version = "0.1.0"
+description = "Football data analysis project"
+authors = ["Tarak Gupta Drebes"]
+readme = "README.md"
+packages = [{include = "football_analytics", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pandas = "^3.0.3"
+sqlalchemy = "^2.0.49"
+python-dotenv = "^1.2.2"
+streamlit = "^1.57.0"
+kagglehub = "^1.0.1"
+psycopg2-binary = "^2.9.12"
+beautifulsoup4 = "^4.14.3"
+requests = "^2.34.1"
+plotly-express = "^0.4.1"
+scraperfc = "^4.5.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

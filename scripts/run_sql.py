@@ -2,11 +2,14 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import text
-from database import get_engine
+import football_analytics
+from football_analytics.database import get_engine
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+PACKAGE_ROOT = Path(football_analytics.__file__).parent
+SQL_DIR = PACKAGE_ROOT / "sql"
 
-load_dotenv(BASE_DIR / '.env')
+PROJECT_ROOT = PACKAGE_ROOT.parent.parent
+load_dotenv(PROJECT_ROOT / '.env')
 
 engine = get_engine()
 
@@ -38,7 +41,7 @@ else:
 with engine.connect() as connection:
     with connection.begin():
         for sql_file in sql_files:
-            with open(BASE_DIR / 'sql' / sql_file, 'r') as file:
+            with open(SQL_DIR / sql_file, 'r') as file:
                 sql_query = text(file.read())
                 connection.execute(sql_query)
                 print(f"Executed {sql_file}")

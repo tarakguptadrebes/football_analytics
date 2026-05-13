@@ -1,4 +1,4 @@
-from database import clean_for_sql
+from src.football_analytics.database import clean_for_sql
 from ScraperFC.sofascore import Sofascore
 import pandas as pd
 

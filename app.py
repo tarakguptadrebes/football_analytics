@@ -3,7 +3,7 @@ import numpy as np
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
-from database import get_engine
+from src.football_analytics.database import get_engine
 
 st.set_page_config(page_title="Football Analytics Dashboard", layout="wide")
 
