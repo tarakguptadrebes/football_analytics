@@ -9,7 +9,7 @@ cd football_analytics
 
 # Create and activate virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows use: .venv\Scripts\Activate.ps1
+source .venv/bin/activate  # On Windows use: .\.venv\Scripts\Activate.ps1
 
 # Install dependencies
 pip install -r requirements.txt
@@ -33,7 +33,7 @@ python -m scripts.download_transfermarkt_data
 python -m scripts.run_sql --quick
 
 # Dashboard
-python -m streamlit run dashboard/app.py
+python -m streamlit run app.py
 ```
 
 ## Full Pipeline
@@ -54,5 +54,5 @@ python -m scripts.download_transfermarkt_data
 python -m scripts.run_sql
 
 # Dashboard
-python -m streamlit run dashboard/app.py
+python -m streamlit run app.py
 ```

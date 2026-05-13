@@ -17,5 +17,12 @@ def get_engine():
 def clean_for_sql(df):
     if df.empty:
         return df
-    dict_cols = [col for col in df.columns if isinstance(df[col].iloc[0], dict)]
-    return df.drop(columns=dict_cols)
+   
+    df = df.loc[:, ~df.columns.duplicated()]
+
+    dict_cols = [col for col in df.columns if df[col].apply(lambda x: isinstance(x, (dict, list))).any()]
+    df = df.drop(columns=dict_cols)
+
+    df = df.drop_duplicates()
+
+    return df

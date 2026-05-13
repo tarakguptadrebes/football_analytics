@@ -1,3 +1,4 @@
+from database import clean_for_sql
 from ScraperFC.sofascore import Sofascore
 import pandas as pd
 import random
@@ -25,7 +26,8 @@ def scrape_player_stats(league, seasons):
             df = ss.scrape_player_match_stats(match_id)
             if df is not None and not df.empty:
                 df["match_id"] = match_id
-                player_stats.append(df)
+                df_cleaned = clean_for_sql(df)
+                player_stats.append(df_cleaned)
         except Exception:
             print(f"Error scraping match")
             break

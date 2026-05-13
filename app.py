@@ -139,7 +139,6 @@ for group in ["18-20", "21-23", "24-26", "27-29", "30-32", "33-35"]:
     x_end = min(x_end, max_x)
     y_start, y_end = m * x_start + c, m * x_end + c
 
-    # 4. Plot (No Hover, Formula in Legend)
     fig.add_scatter(
         x=[x_start, x_end],
         y=[y_start, y_end],

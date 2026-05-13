@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from database import get_engine
 
-def main():
+def download():
     path = kagglehub.dataset_download("davidcariboo/player-scores")
     print("Path to dataset files:", path)
 
@@ -17,4 +17,4 @@ def main():
     print(f"Data saved to table 'transfermarkt_player_valuations' in the database.")
 
 if __name__ == "__main__":
-    main()
+    download()

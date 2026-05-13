@@ -1,3 +1,4 @@
+from database import clean_for_sql
 from ScraperFC.sofascore import Sofascore
 import pandas as pd
 
@@ -13,4 +14,6 @@ def scrape_matches(leagues, seasons):
                 matches.append(m)
 
     df = pd.DataFrame(matches)
-    return df
+    df_cleaned = clean_for_sql(df)
+    
+    return df_cleaned

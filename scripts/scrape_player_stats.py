@@ -1,5 +1,5 @@
 import sys
-from database import get_engine, clean_for_sql
+from database import get_engine
 from config import LEAGUES, SEASONS
 from scrapers.sofascore_player_stats_scraper import scrape_player_stats
 
@@ -14,7 +14,6 @@ def main():
 
     df = scrape_player_stats(name, SEASONS)
 
-    df = clean_for_sql(df)
     engine = get_engine()
     table_name = f"sofascore_{slug}_player_stats"
 
@@ -23,4 +22,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
