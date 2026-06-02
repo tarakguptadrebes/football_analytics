@@ -21,20 +21,20 @@ def scrape_player_stats(league, seasons):
 
     # Loop through each match ID and scrape player stats
     for i, match_id in enumerate(match_ids):
+        time.sleep(random.uniform(5, 10)) 
+
         try:
-            time.sleep(random.uniform(0.5, 1)) 
             df = ss.scrape_player_match_stats(match_id)
-            if df is not None and not df.empty:
+
+        except UnboundLocalError:
+            print(f"Skipping match {match_id}")
+            df = None
+        
+        if df is not None and not df.empty:
                 df["match_id"] = match_id
                 df_cleaned = clean_for_sql(df)
                 player_stats.append(df_cleaned)
-        except Exception:
-            print(f"Error scraping match")
-            break
-        
+
         print(f"{i+1}/{total_matches}", end="\r")    # simple progress counter
 
-    if player_stats:
-        return pd.concat(player_stats, ignore_index=True)
-    else:
-        return pd.DataFrame()
+    return pd.concat(player_stats, ignore_index=True)

@@ -1,5 +1,11 @@
 # Football Analytics
 
+## Prerequisites
+
+- Python 3.11+
+- PostgreSQL
+- Poetry installed (https://python-poetry.org/docs/#installation)
+
 ## Setup
 
 ```bash
@@ -16,42 +22,39 @@ psql -U postgres -c "CREATE DATABASE football_db;"
 # Initialize credentials
 cp .env.example .env
 # STOP: Open .env and enter your PostgreSQL password now!
-
-# Activate the virtual environment
-eval $(poetry env activate)
 ```
 
 ## Quick Start (Recommended)
 
 ```bash
 # Data collection
-python -m scripts.load_csv_data
-python -m scripts.download_transfermarkt_data
+poetry run python -m scripts.load_csv_data
+poetry run python -m scripts.download_transfermarkt_data
 
-# Transform + load
-python -m scripts.run_sql --quick
+# Transform
+poetry run python -m scripts.run_sql --quick
 
 # Dashboard
-python -m streamlit run app.py
+poetry run streamlit run app.py
 ```
 
-## Full Pipeline
+## Full Pipeline (Not Recommended)
 
 ```bash
 # Data collection
-python -m scripts.scrape_matches
+poetry run python -m scripts.scrape_matches
 
-python -m scripts.scrape_player_stats premier_league
-python -m scripts.scrape_player_stats la_liga
-python -m scripts.scrape_player_stats bundesliga
-python -m scripts.scrape_player_stats serie_a
-python -m scripts.scrape_player_stats ligue_1
+poetry run python -m scripts.scrape_player_stats premier_league
+poetry run python -m scripts.scrape_player_stats la_liga
+poetry run python -m scripts.scrape_player_stats bundesliga
+poetry run python -m scripts.scrape_player_stats serie_a
+poetry run python -m scripts.scrape_player_stats ligue_1
 
-python -m scripts.download_transfermarkt_data
+poetry run python -m scripts.download_transfermarkt_data
 
-# Transform + load
-python -m scripts.run_sql
+# Transform
+poetry run python -m scripts.run_sql
 
 # Dashboard
-python -m streamlit run app.py
+poetry run streamlit run app.py
 ```

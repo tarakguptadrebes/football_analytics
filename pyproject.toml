@@ -1,24 +1,27 @@
-[tool.poetry]
+[project]
 name = "football-analytics"
 version = "0.1.0"
-description = "Football data analysis project"
-authors = ["Tarak Gupta Drebes"]
+description = ""
+authors = [
+    {name = "Tarak Gupta Drebes",email = "tarak.guptadrebes@gmail.com"}
+]
 readme = "README.md"
-packages = [{include = "football_analytics", from = "src"}]
+requires-python = ">=3.11,<4"
+dependencies = [
+    "pandas (>=3.0.3,<4.0.0)",
+    "sqlalchemy (>=2.0.49,<3.0.0)",
+    "python-dotenv (>=1.2.2,<2.0.0)",
+    "streamlit (>=1.57.0,<2.0.0)",
+    "kagglehub (>=1.0.1,<2.0.0)",
+    "psycopg2-binary (>=2.9.12,<3.0.0)",
+    "plotly-express (>=0.4.1,<0.5.0)",
+    "requests (>=2.34.1,<3.0.0)",
+    "scraperfc (>=4.5.0,<5.0.0)",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-pandas = "^3.0.3"
-sqlalchemy = "^2.0.49"
-python-dotenv = "^1.2.2"
-streamlit = "^1.57.0"
-kagglehub = "^1.0.1"
-psycopg2-binary = "^2.9.12"
-beautifulsoup4 = "^4.14.3"
-requests = "^2.34.1"
-plotly-express = "^0.4.1"
-scraperfc = "^4.5.0"
+[tool.poetry]
+packages = [{include = "src"}]
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"

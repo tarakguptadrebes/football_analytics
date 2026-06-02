@@ -11,6 +11,12 @@ engine = get_engine()
 
 st.title("Football Analytics Dashboard")
 
+st.caption(
+    "**Methodology Note:** Cohorts consist of the top 500 highest-valued players "
+    "at each age who possess complete rating profiles. Players with missing source metrics "
+    "are omitted prior to ranking."
+)
+
 @st.cache_data
 def load_avg_market_value_with_age():
     return pd.read_sql("SELECT age, avg_market_value FROM avg_market_value_with_age", engine)

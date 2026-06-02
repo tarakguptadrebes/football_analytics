@@ -2,14 +2,12 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import text
-import football_analytics
 from football_analytics.database import get_engine
 
-PACKAGE_ROOT = Path(football_analytics.__file__).parent
-SQL_DIR = PACKAGE_ROOT / "sql"
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-PROJECT_ROOT = PACKAGE_ROOT.parent.parent
-load_dotenv(PROJECT_ROOT / '.env')
+SQL_DIR = BASE_DIR / "sql"
+load_dotenv(BASE_DIR / '.env')
 
 engine = get_engine()
 
@@ -38,10 +36,8 @@ else:
         "avg_rating_with_age.sql",
     ]
 
-with engine.connect() as connection:
-    with connection.begin():
-        for sql_file in sql_files:
-            with open(SQL_DIR / sql_file, 'r') as file:
-                sql_query = text(file.read())
-                connection.execute(sql_query)
-                print(f"Executed {sql_file}")
+with engine.begin() as conn:
+    for sql_file in sql_files:
+        sql_query = text((SQL_DIR / sql_file).read_text())
+        conn.execute(sql_query)
+        print(f"Executed {sql_file}")
