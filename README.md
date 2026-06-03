@@ -27,14 +27,10 @@ cp .env.example .env
 ## Quick Start (Recommended)
 
 ```bash
-# Data collection
-poetry run python -m scripts.load_csv_data
-poetry run python -m scripts.download_transfermarkt_data
+# Load and transform data
+poetry run python main.py --quick
 
-# Transform
-poetry run python -m scripts.run_sql --quick
-
-# Dashboard
+# Launch dashboard
 poetry run streamlit run app.py
 ```
 
@@ -50,11 +46,9 @@ poetry run python -m scripts.scrape_player_stats bundesliga
 poetry run python -m scripts.scrape_player_stats serie_a
 poetry run python -m scripts.scrape_player_stats ligue_1
 
-poetry run python -m scripts.download_transfermarkt_data
+# Load and transform data
+poetry run python main.py
 
-# Transform
-poetry run python -m scripts.run_sql
-
-# Dashboard
+# Launch dashboard
 poetry run streamlit run app.py
 ```

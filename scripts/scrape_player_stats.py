@@ -1,6 +1,6 @@
 import sys
 from football_analytics.database import get_engine
-from football_analytics.scrapers.sofascore_player_stats_scraper import scrape_player_stats
+from football_analytics.sofascore_player_stats_scraper import scrape_player_stats
 from football_analytics.config import LEAGUES, SEASONS
 
 def main():
