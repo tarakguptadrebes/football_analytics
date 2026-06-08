@@ -3,7 +3,7 @@ import numpy as np
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
-from src.football_analytics.database import get_engine
+from football_analytics.database import get_engine
 
 st.set_page_config(page_title="Football Analytics Dashboard", layout="wide")
 
@@ -44,7 +44,7 @@ fig = px.line(
     markers=True
 )
 
-st.plotly_chart(fig, width='stretch')
+st.plotly_chart(fig, width="stretch")
 
 df_rating = load_avg_rating_with_age()
 
@@ -57,28 +57,29 @@ fig = px.line(
     markers=True
 )
 
-st.plotly_chart(fig, width='stretch')
+st.plotly_chart(fig, width="stretch")
 
 df_change = load_change_in_market_value()
 
-df_change['color_status'] = df_change['change_in_value'].apply(lambda x: 'Positive' if x >= 0 else 'Negative')
+df_change["color_status"] = df_change["change_in_value"].apply(lambda x: "Positive" if x >= 0 else "Negative")
 
 fig = px.bar(
     df_change,
     x="age",
     y="change_in_value",
     color="color_status",
+    hover_data={"color_status":False},
     title="Change in Market Value by Age for Top 500 Players By Market Value at Each Age",
     labels={"age": "Age", "change_in_value": "Change in Market Value (€)"},
     color_discrete_map={
-        'Positive': '#00cc96', # Professional green
-        'Negative': '#ef553b'  # Professional red
+        "Positive": "#00cc96", 
+        "Negative": "#ef553b"  
     }
 )
 
 fig.update_layout(showlegend=False)
 
-st.plotly_chart(fig, width='stretch')
+st.plotly_chart(fig, width="stretch")
 
 df_values_ratings = load_values_ratings_with_age()
 
@@ -94,13 +95,13 @@ fig.update_layout(yaxis=dict(range=[0, 80_000_000]))
 
 fig.update_traces(
     marker=dict(
-        size=2,    
-        opacity=0.3, 
-        outliercolor='rgba(0,0,0,0)'
+        size=4,    
+        opacity=0.1, 
+        outliercolor="rgba(0,0,0,0)"
     )
 )
 
-st.plotly_chart(fig, width='stretch')
+st.plotly_chart(fig, width="stretch")
 
 def get_age_group(age):
     if age < 21:
@@ -116,20 +117,42 @@ def get_age_group(age):
     elif 33 <= age < 36:
         return "33-35"
     
-df_values_ratings['age_group'] = df_values_ratings['age'].apply(get_age_group)
+df_values_ratings["age_group"] = df_values_ratings["age"].apply(get_age_group)
 
 fig = go.Figure()
 
+colors={
+    "18-20": "#8B5CF6", "21-23": "#3B82F6", "24-26": "#10B981",
+    "27-29": "#FACC15", "30-32": "#F97316", "33-35": "#EF4444"
+}
+
 for group in ["18-20", "21-23", "24-26", "27-29", "30-32", "33-35"]:
-    subset = df_values_ratings[df_values_ratings['age_group'] == group]
+    subset = df_values_ratings[df_values_ratings["age_group"] == group]
+    if subset.empty: continue
+
+    fig.add_scatter(
+            x=subset["rating"],
+            y=subset["market_value_in_eur"],
+            mode="markers",
+            name=group,
+            showlegend=False,
+            marker=dict(
+                size=4,
+                color=colors[group],
+                opacity=0.1
+            )
+        )
+
+for group in ["18-20", "21-23", "24-26", "27-29", "30-32", "33-35"]:
+    subset = df_values_ratings[df_values_ratings["age_group"] == group]
     if subset.empty: continue
     
-    m, c = np.polyfit(subset['rating'], subset['market_value_in_eur'], 1)
+    m, c = np.polyfit(subset["rating"], subset["market_value_in_eur"], 1)
                       
     formula_text = f"y = {m/1e6:.2f}Mx + {c/1e6:.2f}M"
 
-    min_y, max_y = subset['market_value_in_eur'].min(), subset['market_value_in_eur'].max()
-    min_x, max_x = subset['rating'].min(), subset['rating'].max()
+    min_y, max_y = subset["market_value_in_eur"].min(), subset["market_value_in_eur"].max()
+    min_x, max_x = subset["rating"].min(), subset["rating"].max()
 
     x_start, x_end = min_x, max_x
     y_start, y_end = m * x_start + c, m * x_end + c
@@ -148,13 +171,10 @@ for group in ["18-20", "21-23", "24-26", "27-29", "30-32", "33-35"]:
     fig.add_scatter(
         x=[x_start, x_end],
         y=[y_start, y_end],
-        mode='lines',
+        mode="lines",
         name=f"<b>{group}</b> | {formula_text}",
-        hoverinfo='skip', 
-        line=dict(color={
-            "18-20": "#8B5CF6", "21-23": "#3B82F6", "24-26": "#10B981",
-            "27-29": "#FACC15", "30-32": "#F97316", "33-35": "#EF4444"
-        }[group], width=3)
+        hoverinfo="skip", 
+        line=dict(color=colors[group], width=3)
     )
 
 fig.update_layout(
@@ -162,6 +182,12 @@ fig.update_layout(
     xaxis_title="Rating",
     yaxis_title="Market Value (€)",
     template="plotly_white",
+    xaxis=dict(
+        range=[6.0, 9.0] 
+    ),
+    yaxis=dict(
+        range=[0, 100000000] 
+    ),
     legend=dict(
         title="Age Group & Trendline",
     )
