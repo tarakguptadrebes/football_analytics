@@ -72,8 +72,8 @@ fig = px.bar(
     title="Change in Market Value by Age for Top 500 Players By Market Value at Each Age",
     labels={"age": "Age", "change_in_value": "Change in Market Value (€)"},
     color_discrete_map={
-        "Positive": "#00cc96", 
-        "Negative": "#ef553b"  
+        "Positive": "#10B981",  # Crisp Emerald Green
+        "Negative": "#EF4444"   # Punchy Coral Red
     }
 )
 
@@ -181,12 +181,11 @@ fig.update_layout(
     title="Market Value vs Rating by Age (Top 500 Players By Market Value at Each Age)",
     xaxis_title="Rating",
     yaxis_title="Market Value (€)",
-    template="plotly_white",
     xaxis=dict(
         range=[6.0, 9.0] 
     ),
     yaxis=dict(
-        range=[0, 100000000] 
+        range=[0, 100_000_000] 
     ),
     legend=dict(
         title="Age Group & Trendline",
