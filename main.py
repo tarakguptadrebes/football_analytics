@@ -4,7 +4,7 @@ from football_analytics.download_transfermarkt_data import download
 from football_analytics.run_sql import run_sql
 
 def main():
-    is_quick = "--quick" in sys.argv
+    is_quick = '--quick' in sys.argv
     
     download()
 
@@ -14,5 +14,5 @@ def main():
     else:
         run_sql(quickstart=False)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
