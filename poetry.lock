@@ -1234,14 +1234,14 @@ referencing = ">=0.31.0"
 
 [[package]]
 name = "kagglehub"
-version = "1.0.1"
+version = "1.0.2"
 description = "Access Kaggle resources anywhere"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "kagglehub-1.0.1-py3-none-any.whl", hash = "sha256:003b7f725cbd64cc852a84fd840cf1e1594c2aa13d72f8090ed6e4e178a65166"},
-    {file = "kagglehub-1.0.1.tar.gz", hash = "sha256:eae33eba423de222cf3993d99f5b33c5ff25f33d9ee8efe64236b479462c3c54"},
+    {file = "kagglehub-1.0.2-py3-none-any.whl", hash = "sha256:ffad2d79cfda9b06848e98cb0a4a48e286285cfba4aeadadc0b8dbd9bcadd372"},
+    {file = "kagglehub-1.0.2.tar.gz", hash = "sha256:08abae0c1e249904003ce6f23c189166e3032220478426a552c77c2edb08b93a"},
 ]
 
 [package.dependencies]
@@ -1259,14 +1259,14 @@ signing = ["betterproto (>=2.0.0b6)", "model-signing", "sigstore (>=3.6.1)"]
 
 [[package]]
 name = "kagglesdk"
-version = "0.1.23"
+version = "0.1.28"
 description = "Bindings to access kaggle's external-facing APIs"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "kagglesdk-0.1.23-py3-none-any.whl", hash = "sha256:8966f7d99f59f2b769681e19a2cf52192b23be053de6875c06e66cd85c4f1dd1"},
-    {file = "kagglesdk-0.1.23.tar.gz", hash = "sha256:62e89ae21ae29495e7e597d6160f378efcb0c8734a8c10eaf7f7607a60ac1f25"},
+    {file = "kagglesdk-0.1.28-py3-none-any.whl", hash = "sha256:1b038ec43f1b508ceaeff506118c33f4cb5e8e28e229951aadef0e493a160f5f"},
+    {file = "kagglesdk-0.1.28.tar.gz", hash = "sha256:5bd4f9912d83583dbc3aa1be769d14887a0d59c35331b3bc68031ec4cd4549a0"},
 ]
 
 [package.dependencies]
@@ -3925,4 +3925,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4"
-content-hash = "0fba34d65e4dbacd7ef7fdc812a07fd6207ad2241ae99a3b1974b0ec10892957"
+content-hash = "0059c4bbc0f5ea0194137283adfd15417b6241a4191e612d561784ae4b512fdc"
