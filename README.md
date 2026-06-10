@@ -1,5 +1,8 @@
 # Football Analytics
 
+## Dashboard Link
+- https://tarakguptadrebes-football-analytics-app-zaylna.streamlit.app
+
 ## Prerequisites
 
 - Python 3.11+
