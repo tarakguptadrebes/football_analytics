@@ -7,7 +7,7 @@ load_dotenv()
 
 def get_engine():
 
-    db_url = os.getenv('DB_URL') or st.secrets("DB_URL")
+    db_url = os.getenv('DB_URL') or st.secrets["DB_URL"]
 
     if not db_url:
         raise ValueError("DB_URL is not set in environment variables")
