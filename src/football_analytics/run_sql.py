@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SQL_DIR = BASE_DIR / 'sql'
 load_dotenv(BASE_DIR / '.env')
 
-def run_sql(quickstart: bool = False):
+def run_sql(quickstart: bool = True):
     engine = get_engine()
 
     if quickstart:
@@ -41,5 +41,5 @@ def run_sql(quickstart: bool = False):
             print(f"Executed {sql_file}")
 
 if __name__ == '__main__':
-    is_quick = '--quick' in sys.argv
-    run_sql(quickstart=is_quick)
+    is_all = '--all' in sys.argv
+    run_sql(quickstart=not is_all)

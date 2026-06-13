@@ -27,28 +27,9 @@ cp .env.example .env
 # Open .env and set your DATABASE_URL.
 ```
 
-## Quick Start (Recommended)
+## Run Project
 
 ```bash
-# Load and transform data
-poetry run python main.py --quick
-
-# Launch dashboard
-poetry run streamlit run app.py
-```
-
-## Full Pipeline (Not Recommended)
-
-```bash
-# Data collection
-poetry run python -m scripts.scrape_matches
-
-poetry run python -m scripts.scrape_player_stats premier_league
-poetry run python -m scripts.scrape_player_stats la_liga
-poetry run python -m scripts.scrape_player_stats bundesliga
-poetry run python -m scripts.scrape_player_stats serie_a
-poetry run python -m scripts.scrape_player_stats ligue_1
-
 # Load and transform data
 poetry run python main.py
 
