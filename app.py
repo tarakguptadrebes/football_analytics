@@ -24,8 +24,7 @@ st.caption(
 
 @st.cache_resource
 def get_db_engine():
-    engine = get_engine()
-    return engine
+    return get_engine()
 
 @st.cache_data
 def load_avg_market_value_with_age():
