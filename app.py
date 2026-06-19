@@ -14,8 +14,6 @@ from football_analytics.database import get_engine
 
 st.set_page_config(page_title='Football Analytics Dashboard', layout='wide')
 
-engine = get_engine()
-
 st.title('Football Analytics Dashboard')
 
 st.caption(
@@ -24,21 +22,26 @@ st.caption(
     'are omitted prior to ranking.'
 )
 
+@st.cache_resource
+def get_db_engine():
+    engine = get_engine()
+    return engine
+
 @st.cache_data
 def load_avg_market_value_with_age():
-    return pd.read_sql('SELECT age, avg_market_value FROM avg_market_value_with_age', engine)
+    return pd.read_sql('SELECT age, avg_market_value FROM avg_market_value_with_age', get_db_engine())
 
 @st.cache_data
 def load_avg_rating_with_age():
-    return pd.read_sql('SELECT age, avg_rating FROM avg_rating_with_age', engine)
+    return pd.read_sql('SELECT age, avg_rating FROM avg_rating_with_age', get_db_engine())
 
 @st.cache_data
 def load_change_in_market_value():
-    return pd.read_sql('SELECT age, change_in_value FROM change_in_market_value', engine)
+    return pd.read_sql('SELECT age, change_in_value FROM change_in_market_value', get_db_engine())
 
 @st.cache_data
 def load_values_ratings_with_age():
-    return pd.read_sql('SELECT age, market_value_in_eur, rating FROM values_ratings_with_age', engine)
+    return pd.read_sql('SELECT age, market_value_in_eur, rating FROM values_ratings_with_age', get_db_engine())
 
 df_value = load_avg_market_value_with_age()
 
